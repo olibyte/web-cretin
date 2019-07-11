@@ -1,10 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { MongoClient } from 'mongodb';
-
+import path from 'path';
 const PORT = 8000;
 
 const app = express();
+app.use(express.static(path.join(__dirname, '/build')));
 //parses the JSON object included along with the post request,
 //adding a body property to the request parameter of whatever the matching route is.
 app.use(bodyParser.json());
@@ -62,4 +63,8 @@ app.post('/api/articles/:name/add-comment', (req, res) => {
         res.status(200).json(updatedArticleInfo);
     }, res);
 });
+
+app.get('*', (req,res) => {
+    res.sendFile(path.join(__dirname + '/build/index.html'));
+})
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
